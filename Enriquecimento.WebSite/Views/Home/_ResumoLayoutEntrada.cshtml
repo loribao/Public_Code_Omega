@@ -1,0 +1,43 @@
+﻿@model Enriquecimento.WebSite.Models.ViewResumoLayoutEntrada
+<script type="text/javascript">
+</script>
+<div class="card">
+    <div class="card-header">
+        <div class="form-group">
+            <div class="row">
+                <h5>Nome do Layout: " @Html.DisplayFor(m => m.NomeLayoutEntrada) "</h5>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <h5>Nomes de coluna na primeira linha: " @Html.DisplayFor(m => m.NomesColunasPrimeiraLinha) "</h5>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <h5>Delimitador de coluna: " @Html.DisplayFor(m => m.CaracterDelimitador)  </h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" >
+        <table class="table-striped table dt-responsive nowrap">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Campo</th>
+                    <th scope="col">Tamanho</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item001 in Model.Campos)
+                {
+                    <tr>
+                        <th scope="row">@item001.Id</th>
+                        <td>@item001.NomeCampo</td>
+                        <td>@item001.Tamanho.ToString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

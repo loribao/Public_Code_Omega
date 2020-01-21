@@ -1,0 +1,397 @@
+﻿@model Enriquecimento.WebSite.Models.ViewHome
+<script type="text/javascript">
+    //Início - Temporizador para atualizar a Grid da Fila
+    var contador = 200;
+    setInterval(function () {
+        contador--;
+        if (contador <= -1) {
+            contador = 200;
+            atualizarJobsTable();
+        }
+    }, 1000);
+    //Final - Temporizador para atualizar a Grid da Fila
+    function ddlClienteOnChange() {
+        var idCliente = 0;
+        var data = '';
+        var token = '';
+        var jsondata = {};
+        idCliente = parseInt($('#ddlCliente :selected').val());
+        if ((idCliente === null) || (isNaN(idCliente) == true)) {
+            idCliente = 0;
+        }
+        token = $('input[type=hidden][name=__RequestVerificationToken]', document).val();
+        //Atualizar Session de Cliente selecionado
+        jsondata = {};
+        jsondata.idCliente = idCliente
+        data = JSON.stringify(jsondata);
+        $.ajax({
+            type: 'POST',
+            url: 'Home/AtualizarClienteSelecionado',
+            data: data,
+            contentType: 'application/json',
+            headers: { 'RequestVerificationToken': token },
+            cache: false,
+            async: false,
+            success: function () {
+            },
+            error: function () {
+            }
+        });
+        //Atualizar Procedimentos
+        jsondata = {};
+        jsondata.idCliente = idCliente
+        data = JSON.stringify(jsondata);
+        $.ajax({
+            type: 'POST',
+            url: 'Home/AtualizarDdlProcedimento',
+            data: data,
+            contentType: 'application/json',
+            headers: { 'RequestVerificationToken': token },
+            cache: false,
+            async: false,
+            success: function (result) {
+                $('#divProcedimento').html(result);
+            },
+            error: function () {
+            }
+        });
+        //Atualizar Layouts de Entrada e Layouts de Saída
+        ddlProcedimentoOnChange();
+        //Atualizar a lista de Jobs
+        atualizarJobsTable();
+    }
+    function iconLayoutEntradaOnClick() {
+        var idLayoutEntrada = 0;
+        var data = '';
+        var token = '';
+        var jsondata = {};
+        idLayoutEntrada = parseInt($('#ddlLayoutEntrada :selected').val());
+        if ((idLayoutEntrada === null) || (isNaN(idLayoutEntrada) == true)) {
+            idLayoutEntrada = 0;
+        }
+        token = $('input[type=hidden][name=__RequestVerificationToken]', document).val();
+        if (idLayoutEntrada > 0) {
+            jsondata = {};
+            jsondata.idLayoutEntrada = idLayoutEntrada;
+            data = '';
+            data = JSON.stringify(jsondata);
+            $.ajax({
+                type: 'POST',
+                url: 'Home/ExibirResumoLayoutEntrada',
+                data: data,
+                contentType: 'application/json; charset=utf-8',
+                headers: { 'RequestVerificationToken': token },
+                cache: false,
+                async: true,
+                success: function (response) {
+                    $('#ModalLayoutEntrada').modal("show");
+                    $("#divModalLayoutEntrada").html(response);
+                },
+                error: function () {
+                }
+            });
+        }
+        else {
+            alert('Selecione um Layout de Entrada.');
+        }
+    }
+    function iconLayoutSaidaOnClick() {
+        var idLayoutSaida = 0;
+        var data = '';
+        var token = '';
+        var jsondata = {};
+        idLayoutSaida = parseInt($('#ddlLayoutSaida :selected').val());
+        if ((idLayoutSaida === null) || (isNaN(idLayoutSaida) == true)) {
+            idLayoutSaida = 0;
+        }
+        token = $('input[type=hidden][name=__RequestVerificationToken]', document).val();
+        if (idLayoutSaida > 0) {
+            jsondata = {};
+            jsondata.idLayoutSaida = idLayoutSaida;
+            data = '';
+            data = JSON.stringify(jsondata);
+            $.ajax({
+                type: 'POST',
+                url: 'Home/ExibirResumoLayoutSaida',
+                data: data,
+                contentType: 'application/json; charset=utf-8',
+                headers: { 'RequestVerificationToken': token },
+                cache: false,
+                async: true,
+                success: function (response) {
+                    $('#ModalLayoutSaida').modal("show");
+                    $("#divModalLayoutSaida").html(response);
+                },
+                error: function () {
+                }
+            });
+        }
+        else {
+            alert('Selecione um Layout de Saída.');
+        }
+    }
+    function btnProcessarJobOnClick() {
+        var idCliente = 0;
+        var idProcedimento = 0;
+        var idLayoutEntrada = 0;
+        var idLayoutSaida = 0;
+        var data = '';
+        var token = '';
+        var inputSucesso = false;
+        var jsondata = {};
+        idCliente = parseInt($('#ddlCliente :selected').val());
+        if ((idCliente === undefined) || (idCliente === null) || (isNaN(idCliente) == true)) {
+            idCliente = 0;
+        }
+        idProcedimento = parseInt($('#ddlProcedimento :selected').val());
+        if ((idProcedimento === undefined) || (idProcedimento === null) || (isNaN(idProcedimento) == true)) {
+            idProcedimento = 0;
+        }
+        idLayoutEntrada = parseInt($('#ddlLayoutEntrada :selected').val());
+        if ((idLayoutEntrada === undefined) || (idLayoutEntrada === null) || (isNaN(idLayoutEntrada) == true)) {
+            idLayoutEntrada = 0;
+        }
+        idLayoutSaida = parseInt($('#ddlLayoutSaida :selected').val());
+        if ((idLayoutSaida === undefined) || (idLayoutSaida === null) || (isNaN(idLayoutSaida) == true)) {
+            idLayoutSaida = 0;
+        }
+        token = $('input[type=hidden][name=__RequestVerificationToken]', document).val();
+        if (idCliente > 0) {
+            if (idProcedimento > 0) {
+                if (idLayoutEntrada > 0) {
+                    if (idLayoutSaida > 0) {
+                        jsondata = {};
+                        jsondata.idCliente = idCliente;
+                        jsondata.idProcedimento = idProcedimento;
+                        jsondata.idLayoutEntrada = idLayoutEntrada;
+                        jsondata.idLayoutSaida = idLayoutSaida;
+                        data = '';
+                        data = JSON.stringify(jsondata);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'Home/InputarConfiguracoesJob',
+                            data: data,
+                            contentType: 'application/json; charset=utf-8',
+                            headers: { 'RequestVerificationToken': token },
+                            cache: false,
+                            async: false,
+                            success: function () {
+                                inputSucesso = true;
+                            },
+                            error: function () {
+                            }
+                        });
+                        if (inputSucesso === true) {
+                            var file1 = $('#file001')[0].files[0];
+                            if ((file1 !== undefined) && (file1 !== null)) {
+                                if (file1.name.length > 0) {
+                                    var formData = new FormData();
+                                    formData.append("files", file1);
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: 'Home/UploadFile',
+                                        data: formData,
+                                        contentType: false,
+                                        headers: { 'RequestVerificationToken': token },
+                                        dataType: "json",
+                                        cache: false,
+                                        async: false,
+                                        processData: false,
+                                        success: function () {
+                                        },
+                                        error: function () {
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    $(document).ready(function () {
+        $('#JobsTable').DataTable({
+            'processing': true,
+            'serverSide': true,
+            'language': {
+                'url': 'json/dataTables_ptBR.json'
+            },
+            'ajax': {
+                'url': 'Home/GetFilaJobs',
+                'type': 'POST',
+                headers: { 'RequestVerificationToken': $('input[type=hidden][name=__RequestVerificationToken]', document).val() }
+            },
+            'columns': [
+                { 'data': 'idfila' },/*0*/
+                { 'data': null },/*1*/
+                { 'data': 'job' },/*2*/
+                { 'data': 'cliente' },/*3*/
+                { 'data': 'usuario' },/*4*/
+                { 'data': 'dataentrada' },/*5*/
+                { 'data': 'datasaida' },/*6*/
+                { 'data': 'statusjob' },/*7*/
+                { 'data': 'quantidadeentrada' },/*8*/
+                { 'data': 'quantidadesaida' }/*9*/
+            ],
+            'columnDefs': [
+                {
+                    'targets': 1,
+                    'data': null,
+                    "render": function (data, type, full, meta) {
+                        var column01Value = full.idfila;
+                        return '<div class="col-md-1"><span><i class="fas fa-info-circle" title="Visualizar informações" onclick="iconVisualizarInformacoesJobOnClick(' + column01Value + ')"></i></span></div>';
+                    }
+                },
+                {
+                    className: "wordwrap",
+                    'targets': 2
+                },
+                {
+                    className: "wordwrap",
+                    'targets': 3
+                },
+                {
+                    className: "wordwrap",
+                    'targets': 4
+                }
+            ],
+            'lengthMenu': [[1, 10, 25, 50, -1], [1, 10, 25, 50, 'Todos']],
+            'ordering': false,
+            'paging': true,
+            'searching': true,
+            'filter': true,
+            'pagingType': 'simple',
+            'pageLength': 1
+        });
+    });
+</script>
+<div class="card">
+    <div class="card-body">
+        <form id="formProcessarJob" name="formProcessarJob" method="post">
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label>Cliente:</label>
+                    @{
+                        @Html.DropDownListFor(Model => Model.IdCliente,
+                        ((IEnumerable<Enriquecimento.WebSite.Models.SessionClientes.Cliente>
+                            )ViewData["Clientes"])
+                            .Select(option => new SelectListItem
+                            {
+                            Text = option.NomeCliente,
+                            Value = option.IdCliente.ToString(),
+                            Selected = (Model != null) && (option.IdCliente == Model.IdCliente)
+                            }), new { @class = "form-control ddlCliente", id = "ddlCliente", name = "ddlCliente", onchange = "ddlClienteOnChange()", required = string.Empty })
+                    }
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Procedimento:</label>
+                    <div id="divProcedimento">
+
+                        @await Html.PartialAsync("_Procedimento")
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Layout Entrada:</label>
+                    <div id="divLayoutEntrada">
+
+                        @await Html.PartialAsync("_LayoutEntrada")
+
+                    </div>
+                    <i class="fas fa-eye" title="Visualizar o Layout de Entrada" onclick="iconLayoutEntradaOnClick()"></i>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Layout Saída:</label>
+                    <div id="divLayoutSaida">
+
+                        @await Html.PartialAsync("_LayoutSaida")
+
+                    </div>
+                    <i class="fas fa-eye" title="Visualizar o Layout de Saída" onclick="iconLayoutSaidaOnClick()"></i>
+                </div>
+
+
+                <div class=" wordwrap">
+                    @{
+                        if ((ViewBag.MensagemProcessar != null) && (String.IsNullOrEmpty(ViewBag.MensagemProcessar) == false))
+                        {
+                            <label class="wordwrap" style="color:red;font-weight:bold;">@ViewBag.MensagemProcessar</label>
+                        }
+                        else
+                        {
+                            <label class="wordwrap" style="color:red;font-weight:bold;"></label>
+                        }
+                    }
+                </div>
+
+                @Html.AntiForgeryToken()
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-4 form-group justify-content-center">
+                            
+                                <input type="file" id="file001" name="file001" class="custom-file-input" required />
+                                <div class="btn-primary btn"> 
+                                    <i class="tim-icons icon-cloud-upload-94 " style="font-size:24px;"></i>  
+                                </div>
+                                <label id="labelFile001" for="file001" > Apenas extenções .txt, .csv </label>
+                           
+                            
+                        </div>
+
+                        <div class="col-8">
+                            <button id="btnProcessarJob" type="submit" class="btn btn-info float-right" onclick="btnProcessarJobOnClick()">
+                                Processar
+                            </button>
+                        </div>
+                    </div>               
+                </div>
+               
+            
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="card card-chart">
+    @await Html.PartialAsync("_Grid")
+</div>
+<!--Modal Layout de Entrada-->
+<div class="modal fade" id="ModalLayoutEntrada">
+    <div class="modal-dialog">
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h4 class="card-title">Resumo Layout Entrada</h4>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body" id="divModalLayoutEntrada">
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Layout de Saída-->
+<div class="modal fade" id="ModalLayoutSaida">
+    <div class="modal-dialog">
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h4 class="card-title ">Resumo Layout Saída</h4>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body" id="divModalLayoutSaida">
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Informações-->
+<div class="modal fade" id="ModalInformacoesJob">
+    <div class="modal-dialog">
+        <div class="modal-content card">
+            <div class="modal-header card-header">
+                <h4 class="modal-title">Informações do Job</h4>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body overflow-auto" id="divModalInformacoesJob">
+            </div>
+        </div>
+    </div>
+</div>

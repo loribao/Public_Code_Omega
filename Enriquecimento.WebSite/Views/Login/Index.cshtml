@@ -1,0 +1,98 @@
+﻿@model Enriquecimento.WebSite.Models.ViewLogin
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!-- HTML 4 -->
+    <meta charset="utf-8" /><!-- HTML5 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Enriquecimento - Login</title>
+
+    <!--Registrar css-->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/animate.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/hamburgers.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/animsition.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/daterangepicker.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/login.css" rel="stylesheet" type="text/css">
+
+    <!--Registrar java script-->
+    <script src="~/assets/js/jquery-3.3.1.min.js" charset="utf-8"></script>
+    <script src="~/assets/js/popper.js" charset="utf-8"></script>
+    <script src="~/assets/js/bootstrap.min.js" charset="utf-8"></script>
+    <script src="~/assets/js/animsition.min.js" charset="utf-8"></script>
+    <script src="~/assets/js/select2.min.js" charset="utf-8"></script>
+    <script src="~/assets/js/moment.min.js" charset="utf-8"></script>
+    <script src="~/assets/js/daterangepicker.js" charset="utf-8"></script>
+    <script src="~/assets/js/countdowntime.js" charset="utf-8"></script>
+
+    <!--Registrar favicon-->
+    <link rel="shortcut icon" href="~/assets/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+    <script type="text/javascript">
+    </script>
+    <script src="https://ajax.cloudflare.com/cdn-cgi/scripts/a2bd7673/cloudflare-static/rocket-loader.min.js" data-cf-settings="52db557d781ecd1edb013052-|49" defer=""></script>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100" style="height:600px;">
+                @using (Html.BeginForm("Logar", "Login", FormMethod.Post, new { autocomplete = "off", @class = "login100-form validate-form p-l-55 p-r-55 p-t-178" }))
+                {
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.AntiForgeryToken();
+                    <span class="login100-form-title">
+                        Login
+                    </span>
+                    <div class="wrap-input100 validate-input m-b-16">
+                        @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @name = "usuario", @class = "input100", @maxlength = 30, type = "text", placeholder = "Usuário", required = string.Empty, autofocus = true } })
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-16">
+                        @Html.EditorFor(model => model.Senha, new { htmlAttributes = new { @name = "usuario", @class = "input100", @maxlength = 30, type = "password", placeholder = "Usuário", required = string.Empty } })
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-16">
+                        @Html.EditorFor(model => model.Cliente, new { htmlAttributes = new { @name = "cliente", @class = "input100", @maxlength = 30, type = "text", placeholder = "Cliente", required = string.Empty } })
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="text-right p-t-13 p-b-23">
+                        <span class="txt1">
+                            IP:
+                        </span>
+                        <a class="txt2">
+                            @ViewBag.IP
+                        </a>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn">
+                            Entrar
+                        </button>
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-16">
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-16">
+                        @{
+                            if ((ViewBag.Message != null) && (String.IsNullOrEmpty(ViewBag.Message) == false))
+                            {
+                                <label style="color:red;font-weight:bold;">@ViewBag.Message</label>
+                            }
+                            else
+                            {
+                                <label style="color:red;font-weight:bold;"></label>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

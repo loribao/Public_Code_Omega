@@ -1,0 +1,8 @@
+﻿.white-content * select option {
+    background-color: transparent;
+    color: black;
+}
+* select option {
+    background-color: #344675;
+    color: white;
+}

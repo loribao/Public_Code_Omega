@@ -1,0 +1,70 @@
+﻿<script type="text/javascript">
+    function ddlProcedimentoOnChange() {
+        var idCliente = 0;
+        var idProcedimento = 0;
+        var data = '';
+        var token = '';
+        var jsondata = {};
+
+        idCliente = parseInt($('#ddlCliente :selected').val());
+        if ((idCliente === null) || (isNaN(idCliente) == true)) {
+            idCliente = 0;
+        }
+        idProcedimento = parseInt($('#ddlProcedimento :selected').val());
+        if ((idProcedimento === null) || (isNaN(idProcedimento) == true)) {
+            idProcedimento = 0;
+        }
+        token = $('input[type=hidden][name=__RequestVerificationToken]', document).val();
+
+        //Atualizar Layouts de Entrada
+        jsondata = {};
+        jsondata.idCliente = idCliente;
+        jsondata.idProcedimento = idProcedimento;
+        data = '';
+        data = JSON.stringify(jsondata);
+        $.ajax({
+            type: 'POST',
+            url: 'Home/AtualizarDdlLayoutEntrada',
+            data: data,
+            contentType: 'application/json; charset=utf-8',
+            headers: { 'RequestVerificationToken': token },
+            cache: false,
+            async: false,
+            success: function (response) {
+                $('#divLayoutEntrada').html(response);
+            },
+            error: function () {
+            }
+        });
+
+        //Atualizar Layouts de Saída
+        jsondata = {};
+        jsondata.idCliente = idCliente;
+        jsondata.idProcedimento = idProcedimento;
+        data = '';
+        data = JSON.stringify(jsondata);
+        $.ajax({
+            type: 'POST',
+            url: 'Home/AtualizarDdlLayoutSaida',
+            data: data,
+            contentType: 'application/json; charset=utf-8',
+            headers: { 'RequestVerificationToken': token },
+            cache: false,
+            async: false,
+            success: function (response) {
+                $('#divLayoutSaida').html(response);
+            },
+            error: function () {
+            }
+        });
+    }
+</script>
+@{
+    @Html.DropDownList("ddlProcedimento",
+    ((IEnumerable<Enriquecimento.WebSite.Models.SessionProcedimentos.Procedimento>)ViewData["Procedimentos"])
+    .Select(option => new SelectListItem
+    {
+        Text = option.NomeProcedimento,
+        Value = option.IdProcedimento.ToString()
+    }), new { @class = "form-control ddlProcedimento", id = "ddlProcedimento", name = "ddlProcedimento", onchange = "ddlProcedimentoOnChange()", required = string.Empty })
+}

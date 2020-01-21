@@ -1,0 +1,201 @@
+﻿@model Enriquecimento.WebSite.Models.ViewResumoInformacoesJob
+<script type="text/javascript">
+    function btnArquivoEntradaOnClick(id) {
+        var idFila = parseInt(id);
+
+        if ((idFila === null) || (isNaN(idFila) == true)) {
+            idFila = 0;
+        }
+        if (idFila > 0) {
+            var url = "@Url.Action("DownloadArquivoEntrada", "Home", new { idFila = -1 })";
+            url = url.replace("-1", idFila.toString());
+            window.location = url;
+        }
+    }
+
+    function btnArquivoSaidaOnClick(id) {
+        var idFila = parseInt(id);
+
+        if ((idFila === null) || (isNaN(idFila) == true)) {
+            idFila = 0;
+        }
+        if (idFila > 0) {
+            var url = "@Url.Action("DownloadArquivoSaida", "Home", new { idFila = -1 })";
+            url = url.replace("-1", idFila.toString());
+            window.location = url;
+        }
+    }
+</script>
+<div class="card">
+    <div class="container-fluid">
+        @*Nome do Job*@
+        <div class="form-group">
+            <div class="row">
+                <h5>Nome do Job:  @Html.DisplayFor(m => m.NomeJob)  </h5>
+            </div>
+        </div>
+        @*Data/Hora da Entrada*@
+        <div class="form-group">
+            <div class="row">
+                <h5>Data/Hora da Entrada:  @Html.DisplayFor(m => m.DataHoraEntrada)  </h5>
+            </div>
+        </div>
+        @*Arquivo de Entrada*@
+        <div class="form-group">
+            <div class="row">
+                <h5>
+                    Arquivo de Entrada:
+                    @{
+                        int idFila = (int)Model.IdFila;
+                        <button id="btnArquivoEntrada" name="btnArquivoEntrada" onclick="btnArquivoEntradaOnClick(@idFila)" class="btn btn-link">
+                            @Html.DisplayFor(m => m.ArquivoEntrada)
+                        </button>
+                    }
+                </h5>
+            </div>
+        </div>
+        @*Layout de Entrada*@
+        <div class="form-group">
+            <div id="accordionLayoutEntrada">
+                <div class="card">
+                    <div class="card-header" id="headingLayoutEntrada">
+                        <h5 class="mb-0">
+                            Layout de Entrada:
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseLayoutEntrada" aria-expanded="true" aria-controls="collapseLayoutEntrada">
+                                @Html.DisplayFor(m => m.NomeLayoutEntrada)
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseLayoutEntrada" class="collapse" aria-labelledby="headingLayoutEntrada" data-parent="#accordionLayoutEntrada">
+                        <div class="card-body overflow-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Campo</th>
+                                        <th scope="col">Tamanho</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item001 in Model.CamposLayoutEntrada)
+                                    {
+                                        <tr>
+                                            <th scope="row">@item001.Id</th>
+                                            <td>@item001.NomeCampo</td>
+                                            <td>@item001.Tamanho.ToString()</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*Data/Hora de Saída*@
+        <div class="form-group">
+            <div class="row">
+                <h5>Data/Hora de Saída:  @Html.DisplayFor(m => m.DataHoraSaida) </h5>
+            </div>
+        </div>
+        @*Arquivo de Saída*@
+        <div class="form-group">
+            <div class="row">
+                @{
+                    if (Model.IdStatusJob == (long)Enriquecimento.Models.Enumeradores.StatusJob.Processado)
+                    {
+                        <h5>
+                            Arquivo de Saída:
+                            <button id="btnArquivoSaida" name="btnArquivoSaida" onclick="btnArquivoSaidaOnClick(@idFila)" class="btn btn-link">
+                                @Html.DisplayFor(m => m.ArquivoSaida)
+                            </button>
+                        </h5>
+                    }
+                    else
+                    {
+            <h5>Arquivo de Saída:  @Html.DisplayFor(m => m.ArquivoSaida)  </h5>
+                    }
+                }
+            </div>
+        </div>
+        @*Quantidade de downloads*@
+        <div class="form-group">
+            <div class="row">
+                <h5>Quantidade de downloads:  @Html.DisplayFor(m => m.DownloadsRealizados) </h5>
+            </div>
+        </div>
+        @*Layout de Saída*@
+        <div class="form-group">
+            <div id="accordionLayoutSaida">
+                <div class="card">
+                    <div class="card-header" id="headingLayoutSaida">
+                        <h5 class="mb-0">
+                            Layout de Saída:
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseLayoutSaida" aria-expanded="true" aria-controls="collapseLayoutSaida">
+                                @Html.DisplayFor(m => m.NomeLayoutSaida)
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseLayoutSaida" class="collapse" aria-labelledby="headingLayoutSaida" data-parent="#accordionLayoutSaida">
+                        <div class="card-body overflow-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Campo</th>
+                                        <th scope="col">Tamanho</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item001 in Model.CamposLayoutSaida)
+                                    {
+                                        <tr>
+                                            <th scope="row">@item001.Id</th>
+                                            <td>@item001.NomeCampo</td>
+                                            <td>@item001.Tamanho.ToString()</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*Procedimento*@
+        <div class="form-group">
+            <div class="row">
+                <h5>Procedimento:  @Html.DisplayFor(m => m.NomeProcedimento) </h5>
+            </div>
+        </div>
+        @*Erro*@
+        @{
+            if (Model.IdStatusJob == (long)Enriquecimento.Models.Enumeradores.StatusJob.Erro)
+            {
+                <div class="form-group">
+                    <div id="accordionErro">
+                        <div class="card">
+                            <div class="card-header" id="headingErro">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseErro" aria-expanded="true" aria-controls="collapseErro">
+                                        Erro:
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="collapseErro" class="collapse" aria-labelledby="headingErro" data-parent="#accordionErro">
+                                <div class="card-body overflow-auto">
+                                    <div class="row">
+                                                <h5>Aonde ocorreu:  @Html.DisplayFor(m => m.InstrucaoErro) </h5>
+                                    </div>
+                                    <div class="row wordwrap">
+                                        <h5>Mensagem de Erro:  @Html.DisplayFor(m => m.Erro) </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

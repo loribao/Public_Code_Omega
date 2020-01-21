@@ -1,0 +1,13 @@
+﻿<script type="text/javascript">
+</script>
+<div>
+    @{
+        @Html.DropDownList("ddlLayoutEntrada",
+        ((IEnumerable<Enriquecimento.WebSite.Models.SessionLayoutsEntrada.LayoutEntrada>)ViewData["LayoutsEntrada"])
+        .Select(option => new SelectListItem
+        {
+            Text = option.NomeLayoutEntrada,
+            Value = option.IdLayoutEntrada.ToString()
+        }), new { @class = "form-control ddlLayoutEntrada", id = "ddlLayoutEntrada", name = "ddlLayoutEntrada", required = string.Empty })
+    }
+</div>

@@ -1,0 +1,71 @@
+﻿<script type="text/javascript">
+    function btnAtualizarJobsTableOnClick() {
+        atualizarJobsTable();
+    }
+
+    function iconVisualizarInformacoesJobOnClick(idFila) {
+        var data = '';
+        var token = '';
+        var jsondata = {};
+
+        if ((idFila === null) || (isNaN(idFila) == true)) {
+            idFila = 0;
+        }
+        token = $('input[type=hidden][name=__RequestVerificationToken]', document).val();
+
+        jsondata = {};
+        jsondata.idFila = idFila;
+        data = '';
+        data = JSON.stringify(jsondata);
+        $.ajax({
+            type: 'POST',
+            url: 'Home/VisualizarInformacoesJob',
+            data: data,
+            contentType: 'application/json; charset=utf-8',
+            headers: { 'RequestVerificationToken': token },
+            cache: false,
+            async: true,
+            success: function (response) {
+                $('#ModalInformacoesJob').modal("show");
+                $("#divModalInformacoesJob").html(response);
+            },
+            error: function () {
+            }
+        });
+    }
+</script>
+<div class="card-header ">
+    <div class="float-right">
+        <button id="btnAtualizarJobsTable" name="btnAtualizarJobsTable" type="submit" class="btn btn-info" onclick="btnAtualizarJobsTableOnClick()">
+            Atualizar
+        </button>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Lista de Jobs
+            </h3>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="panel-body">
+            <table id="JobsTable" class=" table-striped table dt-responsive nowrap" >
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="">Id</th>
+                        <th class="">Info</th>
+                        <th class="">Job</th>
+                        <th class="">Cliente</th>
+                        <th class="">Usuário</th>
+                        <th class="">Data Entrada</th>
+                        <th class="">Data Saída</th>
+                        <th class="">Status</th>
+                        <th class="">Quantidade de Entrada</th>
+                        <th class="">Quantidade de Saída</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
